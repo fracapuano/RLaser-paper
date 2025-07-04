@@ -1,0 +1,178 @@
+% RLJ main.tex Version 2025.0
+
+\documentclass[10pt,table]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AUTHOR: Select ONE option:
+%      [accepted]{rlj} --> for camera ready (after peer review, if accepted)
+%      {rlj}           --> for submission
+%      [preprint]{rlj} --> to de-anonymize and remove references to RLJ/RLC
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{rlj}           % Should be uncommented for submission
+%\usepackage[accepted]{rlj} % Should be uncommented for the camera-ready
+\usepackage[preprint]{rlj} % Should be uncommented for preprint versions
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% WARNING: The following packages are already included in the
+%          rlj.sty style file:
+%
+%  1. fancyhdr  - For controlling header/footers
+%  2. natbib    - For formatting the bibliography
+%  3. enumitem  - To customize the appearance of lists
+%  4. fontenc (with option [T1]) - Allows for proper hyphenation and accents
+%  5. times     - Times new roman font
+%  6. ragged2e  - Used to justify text
+%  7. tcolorbox - Used to create boxes on cover page
+%  8. hyperref  - Configures hyperlinks throughout (e.g., links to references)
+%  9. xcolor    - Used to define custom colors for links and boxes
+%  10. amsmath  - Not used, but conflicts with lineno, so we include (and patch) it for authors
+%  11. etoolbox - Included in the amsmath + lineno patch
+%  12. lineno   - For adding line numbers when in submission
+%
+% You do not need to include them again in your main.tex.
+% Including them again may lead to conflicts or compilation errors.
+% Additionally, avoid loading packages that might conflict with these.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Recommended (but not required) packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx}
+\usepackage{amssymb}            % Defines common symbols like \mathbb R
+\usepackage{mathtools}          % Extends amsmath, providing common math tools
+\usepackage{mathrsfs}           % Enables \mathscr, which can work in cases that \mathcal does not
+\mathtoolsset{showonlyrefs}     % Only number equations that are referenced (optional)
+\usepackage{graphicx}           % For including images
+\usepackage{subcaption}         % Allows for the use of subfigures and subcaptions
+\usepackage[space]{grffile}     % For spaces in image names
+\usepackage{url}                % For displaying URLs
+\usepackage{lipsum}             % For placeholder text
+% \usepackage[backref=page]{hyperref}  % It is loaded by default it seems
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AUTHOR: Fill in the following meta-data
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath}
+\DeclareMathOperator\supp{supp}
+
+\newcommand{\gdd}{\text{GDD}}
+\newcommand{\tod}{\text{TOD}}
+\newcommand{\fod}{\text{FOD}}
+\newcommand{\gddcomp}{\text{GDD}_c}
+\newcommand{\Beta}{\text{Beta}}
+
+% Enter the title of your paper:
+\title{Shaping Laser Pulses with Reinforcement Learning}
+
+% The "running title" will be displayed in the header on every-other page.
+% It is typically either the same as the title or a shorter version of the title.
+% Enter your running title here:
+\setrunningtitle{Shaping Laser Pulses with Reinforcement Learning}
+
+% WARNING: Authors must not appear in the submitted version. They should be hidden
+% as long as the rlj package is used without the [accepted] or [preprint] options.
+% Non-anonymous submissions will be rejected without review.
+
+% Enter the author names below. 
+% NOTE: Denote affiliations using superscripts as in the provided example.
+% NOTE: Use \textscript{1,2,3} instead of $^{1,2,3}$.
+%       - Failure to do so will cause affiliation superscripts to appear on the cover page for camera-ready and preprint versions.
+\author{
+Francesco Capuano\textsuperscript{1},
+Davorin Peceli\textsuperscript{2},
+Gabriele Tiboni\textsuperscript{3,4}
+}
+
+% NOTE: For camera-ready and preprint versions, the cover page includes author names but not affiliations.
+% It automatically removes the superscripts for affiliations.
+% If the automatic process breaks (e.g., if an author name should include a superscript), you can manually define the author string to appear on the cover page by uncommenting the following line.
+%\coverPageAuthor{Marlos C. Machado, Philip S. Thomas, Lorem Ipsum}
+
+% Author emails, which can be clustered if they have shared endings as in this example
+\emails{
+francesco.capuano@ens-paris-saclay.fr, \\
+davorin.peceli@eli-beams.eu, \\
+gabriele.tiboni@uni-wuerzburg.de
+}
+
+% Author affiliations, in the order the occur
+% The inclusion of state/province, etc. is optional.
+% The inclusion of multiple affiliations is optional.
+%   - List multiple affiliations with comma-separated numbers as in the example.
+\affiliations{
+$^{1}$\textbf{École Normale Supérieure Paris-Saclay, Gif-sur-Yvette, France} \\
+$^{2}$\textbf{Extreme Light Infrastructure-ELI Beamlines, ELI Beamlines, Dolní Břežany, Czechia }\\
+$^{3}$\textbf{Julius-Maximilians-Universität Würzburg, Würzburg, Germany}\\
+$^{4}$\textbf{Technische Universität Darmstadt, Darmstadt, Germany}
+}
+
+% Include a list of keywords for the topic of the paper:
+\keywords{Applied RL, DRL for Science, Sim-to-real, Domain Randomization, Ultra-short pulses}
+
+% Define the summary that appears on the cover page.
+\summary{
+\input{01_summary}
+}
+
+% Define contributions, still on cover page
+\input{02_contributions}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Begin document, create title and abstract
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\makeCover  % Create the cover page
+\maketitle  % Make the title section
+
+\begin{abstract}
+\input{sections/00_abstract}
+\end{abstract}
+
+\section{Introduction}
+\label{sec:introduction}
+\input{sections/01_introduction}
+
+\section{Background \& Related Work}
+\label{sec:background}
+\input{sections/02_background}
+
+\section{Method}
+\label{sec:method}
+\input{sections/03_method}
+
+\section{Experiments}
+\label{sec:experiments}
+\input{sections/04_experiments}
+
+\section{Conclusions}
+\label{sec:discussion}
+\input{sections/05_conclusions}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Appendices
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \appendix
+
+% \section{A Physical Model for Phase Accumulation}\label{app:physics}
+% \input{appendix/01_phase_model}
+
+
+% \section*{Appendix}
+% This format should only be used if there is a single appendix (unlike in this document).
+
+% \subsubsection*{Acknowledgments}
+% \label{sec:ack}
+% Use unnumbered third level headings for the acknowledgments. All acknowledgments, including those to funding agencies, go at the end of the paper. Only add this information once your submission is accepted and deanonymized. The acknowledgments do not count towards the 8--12 page limit.
+
+\bibliography{main}
+\bibliographystyle{rlj}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AUTHOR: If your paper has no supplementary materials, you may 
+%         comment out the line below, which creates the title for
+%         the supplementary materials.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \beginSupplementaryMaterials
+
+\end{document}
