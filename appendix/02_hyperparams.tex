@@ -1,0 +1,28 @@
+\begin{table}[h]
+\centering
+\caption{Key hyper-parameters used in all experiments. Values are identical across seeds unless otherwise noted.}
+\label{tab:hyperparams}
+\begin{tabular}{lcc}
+\toprule
+Parameter & SAC / Asym-SAC & BO \\
+\midrule
+Random seeds & 5 & 5 \\
+Environment steps & 200k & 200 evaluations \\
+Replay-buffer size & $10^6$ & – \\
+Batch size & 256 & – \\
+Discount $(\gamma)$ & 0.99 & – \\
+Target–network update rate & $\tau=0.005$ & – \\
+Optimizer & Adam $(10^{-4})$ & – \\
+Actor hidden layers & (256, 256) & – \\
+Critic hidden layers & (256, 256) & – \\
+Entropy coefficient & Auto-tuned & – \\
+Normalisation of observations & Yes (running mean/std) & Standardisation of targets \\
+GP kernel & – & Matérn 5/2 \\
+Acquisition function & – & Expected improvement $(\xi=0.01)$ \\
+Action noise (BO) & – & $\mathcal N(0, 0.02)$ \\
+Max BO iterations & – & 20 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Where applicable, hyper-parameters follow the original SAC implementation by \citet{haarnoja2018soft}. The same actor/critic architectures are used for the asymmetric variant; privileged information is only concatenated to the critic inputs during training.
