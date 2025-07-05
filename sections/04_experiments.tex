@@ -67,8 +67,44 @@
     \centering
     \begin{minipage}{0.48\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{images/max_intensity_vs_b_integral.png}
-        \caption{Comparison of different strategies, measured by the average max peak intensity over 5 test episodes as a function of B-integral. These results illustrate DORAEMON's comparable performance with hand-tuned bounds for UDR.}
+        \begin{tikzpicture}
+        \begin{axis}[
+            width=\linewidth,
+            height=5.0cm,
+            xlabel={$B$-integral},
+            ylabel={Avg.~max~peak~intensity~(\%)},
+            ymajorgrids=true,
+            legend style={at={(0.03,0.97)},anchor=north west,font=\scriptsize},
+            ymin=70,ymax=95,
+            xmin=1.5,xmax=3.0
+        ]
+        % SAC delta(2)
+        \addplot+[mark=*,error bars/.cd,y dir=both,y explicit]
+            coordinates {
+                (1.68,86.18) +- (0,1.60)
+                (2.08,83.80) +- (0,2.34)
+                (2.87,77.67) +- (0,2.53)
+            };
+        \addlegendentry{SAC $\delta(2)$}
+        % Asym-SAC UDR(1.5,2.5)
+        \addplot+[mark=square*,error bars/.cd,y dir=both,y explicit]
+            coordinates {
+                (1.68,88.69) +- (0,0.60)
+                (2.08,86.07) +- (0,0.49)
+                (2.87,79.32) +- (0,1.12)
+            };
+        \addlegendentry{A-SAC $\mathcal U(1.5,2.5)$}
+        % Asym-SAC DORAEMON
+        \addplot+[mark=triangle*,error bars/.cd,y dir=both,y explicit]
+            coordinates {
+                (1.68,86.04) +- (0,3.78)
+                (2.08,85.12) +- (0,1.10)
+                (2.87,79.34) +- (0,1.59)
+            };
+        \addlegendentry{A-SAC DORAEMON(1,3.5)}
+        \end{axis}
+        \end{tikzpicture}
+        \caption{Average max peak intensity ($\pm$1~SD over 5 seeds) as a function of $B$ for three representative configurations. Error bars make variance visible and facilitate statistical comparison.}
         \label{fig:max_intensity_vs_b_integral}
     \end{minipage}
     \hfill
@@ -103,9 +139,9 @@ We therefore compare the naive UDR approach with DORAEMON, by adapting the train
 % We therefore attribute the stronger performance to the capabilities of the curriculum to avoid abrupt changes to the dynamics while training our policies with DR,
 Figure~\ref{fig:DORAEMON_distrs_over_training} shows the evolution of the distributions \(\{\Beta(a_k, b_k) \}_{k=1}^{K} \) over the course of training.
 %, when these are updated towards maximum entropy so long as a performance lower bound is maintained.
-Interestingly, the distributions eventually converge to the maximum entropy \( \mathcal U(1, 3.5) \), indicating that sufficient training performance can be maintained even in the extreme case. To investigate the effectiveness of the curriculum for DORAEMON, we then evaluate it against naive UDR on a slighly narrower support \( \mathcal U(1, 3) \), and observe DORAEMON's superior in Table~\ref{tab:peak_intensities}).
+Interestingly, the distributions eventually converge to the maximum entropy \( \mathcal U(1, 3.5) \), indicating that sufficient training performance can be maintained even in the extreme case. To investigate the effectiveness of the curriculum for DORAEMON, we then evaluate it against naive UDR on a slightly narrower support \( \mathcal U(1, 3) \), and observe DORAEMON's superior in Table~\ref{tab:peak_intensities}).
 
-\paragraph{Implementation details and baseline selection.} All reinforcement-learning experiments were carried out with \textbf{five independent random seeds}. Unless otherwise stated, we trained each policy for 200k environment steps with a replay buffer of size $10^6$, a batch size of 256 and the SAC temperature tuned with automatic entropy adjustment. For each trained policy we report the mean \(\pm\) one standard deviation computed over the five seeds and ten evaluation episodes per seed. The hyper-parameters for both SAC and Asymmetric-SAC (actor/critic network architectures, learning rates, discount factor, etc.) are listed in Appendix~\ref{app:hyperparams}. The Bayesian–Optimisation (BO) baseline is implemented using \citet{shalloo2020automation}'s Gaussian-process surrogate with an expected-improvement acquisition function; we reused the open-source implementation made available by those authors and validated it on the original benchmark.
+\paragraph{Implementation details and baseline selection.} All reinforcement-learning experiments were carried out with \textbf{five independent random seeds}. Unless otherwise stated, we trained each policy for 200k environment steps with a replay buffer of size $10^6$, a batch size of 256 and the SAC temperature tuned with automatic entropy adjustment. For each trained policy we report the mean \(\pm\) one standard deviation computed over the five seeds and ten evaluation episodes per seed. Statistical significance between each DR variant and its non-DR counterpart is assessed with Welch's two-sided $t$-test ($p<0.05$); significantly better results are marked with $^{\ast}$ in Tables~\ref{tab:peak_intensities}–\ref{tab:succ_rate}. The hyper-parameters for both SAC and Asymmetric-SAC (actor/critic network architectures, learning rates, discount factor, etc.) are listed in Appendix~\ref{app:hyperparams}. The Bayesian–Optimisation (BO) baseline is implemented using \citet{shalloo2020automation}'s Gaussian-process surrogate with an expected-improvement acquisition function; we reused the open-source implementation made available by those authors and validated it on the original benchmark.
 
 We acknowledge that evolutionary strategies (ES) and the cross-entropy method (CEM) are also commonly employed for laser optimisation. Preliminary experiments (not shown) indicated that, when constrained by the same machine-safety limits imposed in this paper, their convergence in our simulator is noticeably slower than BO, making a rigorous comparison prohibitively expensive within the current compute budget. A comprehensive benchmark against ES/CEM is therefore left to future work and the associated claim in Section~\ref{sec:introduction} has been softened accordingly.
 
