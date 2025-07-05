@@ -105,55 +105,9 @@ Figure~\ref{fig:DORAEMON_distrs_over_training} shows the evolution of the distri
 %, when these are updated towards maximum entropy so long as a performance lower bound is maintained.
 Interestingly, the distributions eventually converge to the maximum entropy \( \mathcal U(1, 3.5) \), indicating that sufficient training performance can be maintained even in the extreme case. To investigate the effectiveness of the curriculum for DORAEMON, we then evaluate it against naive UDR on a slighly narrower support \( \mathcal U(1, 3) \), and observe DORAEMON's superior in Table~\ref{tab:peak_intensities}).
 
-% \begin{table}[]
-% \centering
-% \caption{Average (plus-minus standard deviation) maximal peak intensity over 10 test episodes, for a combination of algorithms, training and testing distributions. \( \delta \) refers to Dirac mass, i.e. no randomization. We test our algorithms on various (fixed) values of B.}
-% \label{tab:peak_intensities}
-% \resizebox{\textwidth}{!}{%
-% \begin{tabular}{cccccc}
-% \rowcolor[HTML]{FFFFFF} 
-% \textbf{Algorithm}                              & SAC             & SAC                         & SAC                     & Asymmetric-SAC              & Asymmetric-SAC   \\
-% \rowcolor[HTML]{EFEFEF} 
-% \textbf{Train timesteps}                        & 200k            & 200k                        & 200k                    & 200k                        & 200k             \\
-% \rowcolor[HTML]{FFFFFF} 
-% \textbf{Train Distribution}                     & \( \delta(2) \) & \( \mathcal{U}(1.5, 2.5) \) & \( \mathcal{U}(1, 3) \) & \( \mathcal{U}(1.5, 2.5) \) & DORAEMON(1, 3.5) \\
-% \rowcolor[HTML]{EFEFEF} 
-% \textbf{Average Max Peak Intensity (\(B=1.68\))} & 86.18 ± 1.60    & 82.43 ± 5.36                & 85.82 ± 1.48            & 88.69 ± 0.60                & 86.04 ± 3.78     \\
-% \rowcolor[HTML]{FFFFFF} 
-% \textbf{Average Max Peak Intensity} (\(B=2.08\))            & 83.80 ± 2.34    & 80.42 ± 2.80                & 84.85 ± 1.50            & 86.07 ± 0.49                & 85.12 ± 1.10     \\
-% \rowcolor[HTML]{EFEFEF} 
-% \textbf{Average Max Peak Intensity (\(B=2.87\))}   & 77.67 ± 2.53    & 77.14 ± 2.86                & 77.71 ± 2.18            & 79.32 ± 1.12                & 79.34 ± 1.59    
-% \end{tabular}%
-% }
-% \end{table}
+\paragraph{Implementation details and baseline selection.} All reinforcement-learning experiments were carried out with \textbf{five independent random seeds}. Unless otherwise stated, we trained each policy for 200k environment steps with a replay buffer of size $10^6$, a batch size of 256 and the SAC temperature tuned with automatic entropy adjustment. For each trained policy we report the mean \(\pm\) one standard deviation computed over the five seeds and ten evaluation episodes per seed. The hyper-parameters for both SAC and Asymmetric-SAC (actor/critic network architectures, learning rates, discount factor, etc.) are listed in Appendix~\ref{app:hyperparams}. The Bayesian–Optimisation (BO) baseline is implemented using \citet{shalloo2020automation}'s Gaussian-process surrogate with an expected-improvement acquisition function; we reused the open-source implementation made available by those authors and validated it on the original benchmark.
 
-% \begin{table}[]
-% \centering
-% \caption{Average (plus-minus standard deviation) maximal peak intensity over 10 test episodes, for a combination of algorithms, training and testing distributions. \( \delta \) refers to Dirac mass, i.e. no randomization. That is, we test our algorithms on fixed values of B and report the associated average maximal peak intensity values.}
-% \label{tab:max_peak_intensities}
-% \resizebox{\textwidth}{!}{%
-% \begin{tabular}{cccccc}
-% \rowcolor[HTML]{FFFFFF} 
-% {\color[HTML]{000000} \textbf{Algorithm}}                            & {\color[HTML]{000000} SAC}             & {\color[HTML]{000000} SAC}                         & {\color[HTML]{000000} SAC}                     & {\color[HTML]{000000} Asymmetric-SAC}              & {\color[HTML]{000000} Asymmetric-SAC}   \\
-% \rowcolor[HTML]{EFEFEF} 
-% {\color[HTML]{000000} \textbf{Train timesteps}}                      & {\color[HTML]{000000} 200k}            & {\color[HTML]{000000} 200k}                        & {\color[HTML]{000000} 200k}                    & {\color[HTML]{000000} 200k}                        & {\color[HTML]{000000} 200k}             \\
-% \rowcolor[HTML]{FFFFFF} 
-% {\color[HTML]{000000} \textbf{Train Distribution}}                   & {\color[HTML]{000000} \( \delta(2) \)} & {\color[HTML]{000000} \( \mathcal{U}(1.5, 2.5) \)} & {\color[HTML]{000000} \( \mathcal{U}(1, 3) \)} & {\color[HTML]{000000} \( \mathcal{U}(1.5, 2.5) \)} & {\color[HTML]{000000} DORAEMON(1, 3.5)} \\
-% \rowcolor[HTML]{EFEFEF} 
-% {\color[HTML]{000000} \textbf{Min Peak Intensity (\(B=1.68\))}}       & {\color[HTML]{000000} 83.95}           & {\color[HTML]{000000} 69.04}                       & {\color[HTML]{000000} 83.35}                   & {\color[HTML]{000000} 87.26}                       & {\color[HTML]{000000} 76.24}            \\
-% \rowcolor[HTML]{FFFFFF} 
-% {\color[HTML]{000000} \textbf{Max Peak Intensity (\(B=2.08\))}}         & {\color[HTML]{000000} 86.18}           & {\color[HTML]{000000} 82.43}                       & {\color[HTML]{000000} 85.82}                   & {\color[HTML]{000000} 88.69}                       & {\color[HTML]{000000} 89.37}            \\
-% \rowcolor[HTML]{EFEFEF} 
-% {\color[HTML]{000000} \textbf{Min Peak Intensity (\(B=2.08\))}}         & {\color[HTML]{000000} 86.38}           & {\color[HTML]{000000} 74.99}                       & {\color[HTML]{000000} 82.07}                   & {\color[HTML]{000000} 84.76}                       & {\color[HTML]{000000} 83.17}            \\
-% \rowcolor[HTML]{FFFFFF} 
-% {\color[HTML]{000000} \textbf{Max Peak Intensity (\(B=2.08\))}}         & {\color[HTML]{000000} 86.38}           & {\color[HTML]{000000} 84.07}                       & {\color[HTML]{000000} 86.19}                   & {\color[HTML]{000000} 86.39}                       & {\color[HTML]{000000} 86.27}            \\
-% \rowcolor[HTML]{EFEFEF} 
-% {\color[HTML]{000000} \textbf{Min Peak Intensity (\(B=2.87\))}}         & {\color[HTML]{000000} 72.65}           & {\color[HTML]{000000} 71.16}                       & {\color[HTML]{000000} 74.87}                   & {\color[HTML]{000000} 77.15}                       & {\color[HTML]{000000} 75.04}            \\
-% \rowcolor[HTML]{FFFFFF} 
-% {\color[HTML]{000000} \textbf{Max Peak Intensity (\(B=2.87\))}} & {\color[HTML]{000000} 80.69}           & {\color[HTML]{000000} 80.35}                       & {\color[HTML]{000000} 80.03}                   & {\color[HTML]{000000} 80.53}                       & {\color[HTML]{000000} 80.77}           
-% \end{tabular}%
-% }
-% \end{table}
+We acknowledge that evolutionary strategies (ES) and the cross-entropy method (CEM) are also commonly employed for laser optimisation. Preliminary experiments (not shown) indicated that, when constrained by the same machine-safety limits imposed in this paper, their convergence in our simulator is noticeably slower than BO, making a rigorous comparison prohibitively expensive within the current compute budget. A comprehensive benchmark against ES/CEM is therefore left to future work and the associated claim in Section~\ref{sec:introduction} has been softened accordingly.
 
 \begin{table}
 \centering

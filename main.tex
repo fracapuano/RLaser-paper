@@ -48,6 +48,7 @@
 \usepackage{url}                % For displaying URLs
 \usepackage{lipsum}             % For placeholder text
 % \usepackage[backref=page]{hyperref}  % It is loaded by default it seems
+\usepackage{booktabs}           % Professional looking tables
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % AUTHOR: Fill in the following meta-data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -152,18 +153,13 @@ $^{4}$\textbf{Technische Universität Darmstadt, Darmstadt, Germany}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Appendices
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \appendix
+\appendix
 
-% \section{A Physical Model for Phase Accumulation}\label{app:physics}
-% \input{appendix/01_phase_model}
+\section{A Physical Model for Phase Accumulation}\label{app:physics}
+\input{appendix/01_phase_model}
 
-
-% \section*{Appendix}
-% This format should only be used if there is a single appendix (unlike in this document).
-
-% \subsubsection*{Acknowledgments}
-% \label{sec:ack}
-% Use unnumbered third level headings for the acknowledgments. All acknowledgments, including those to funding agencies, go at the end of the paper. Only add this information once your submission is accepted and deanonymized. The acknowledgments do not count towards the 8--12 page limit.
+\section{Training Hyper-parameters}\label{app:hyperparams}
+\input{appendix/02_hyperparams}
 
 \bibliography{main}
 \bibliographystyle{rlj}
