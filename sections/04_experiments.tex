@@ -1,20 +1,3 @@
-% \begin{figure}
-%     \centering
-%     \begin{subfigure}{0.65\textwidth}
-%         \centering
-%         \includegraphics[width=\linewidth]{images/frogopt.png}
-%         \caption{SAC, learning to shape temporal pulses directly from FROG traces. The temporal profile associated with the FROG trace is superimposed on the top right of the trace for completeness and is never made available to the agent. In under 20 interactions, the agent produces near-TL temporal profiles.}
-%         \label{fig:frog_opt}
-%     \end{subfigure}
-%     \hfill
-%     \begin{subfigure}{0.30\textwidth}
-%         \centering
-%         \includegraphics[width=\linewidth]{images/machinesafety.png}
-%         \caption{Evolution of the controls applied by BO vs RL. As it samples from an iteratively-refined surrogate model of the unknown function \( f(\psi)=I^*\), BO explores much more erratically than RL.}
-%         \label{fig:bayes_vs_rl}
-%     \end{subfigure}
-% \end{figure}
-
 \begin{figure}
     \centering
     \begin{minipage}{0.65\textwidth}
@@ -27,41 +10,10 @@
     \begin{minipage}{0.30\textwidth}
         \centering
         \includegraphics[width=\linewidth]{images/machinesafety.png}
-        \caption{Evolution of the controls applied by BO vs RL. As it samples from an iteratively-refined surrogate model of the unknown function \( f(\psi)=I^*\), BO explores much more erratically than RL.}
+        \caption{Controls applied (BO vs RL). As it samples from an iteratively-refined surrogate model of \( f(\psi)=I^*\), BO explores much more erratically than RL.}
         \label{fig:bayes_vs_rl}
     \end{minipage}
 \end{figure}
-
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=0.9\linewidth]{images/doraemon_distr.png}
-%     \caption{Evolution of the distribution used when training an agent with DR via Entropy Maximization (DORAEMON). Every update $20 \geq k \geq 4$ does not further impact the evolution of the distribution over $B$, as success rate plateus at 90\%.}
-%     \label{fig:DORAEMON_distrs_over_training}
-% \end{figure}
-
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=0.7\linewidth]{images/max_intensity_vs_b_integral.png}
-%     \caption{Comparison of the different strategies proposed, measured by the average max peak intensity over 5 test episodes as a function of B-integral. These results illustrate DORAEMON's comparable performance with hand-tuned bounds for UDR.}
-%     \label{fig:max_intensity_vs_b_integral}
-% \end{figure}
-
-% \begin{figure}
-%     \centering
-%     \begin{subfigure}{0.48\linewidth}
-%         \centering
-%         \includegraphics[width=\linewidth]{images/max_intensity_vs_b_integral.png}
-%         \caption{Comparison of different strategies, measured by the average max peak intensity over 5 test episodes as a function of B-integral. These results illustrate DORAEMON's comparable performance with hand-tuned bounds for UDR.}
-%         \label{fig:max_intensity_vs_b_integral}
-%     \end{subfigure}
-%     \hfill
-%     \begin{subfigure}{0.48\linewidth}
-%         \centering
-%         \includegraphics[width=\linewidth]{images/doraemon_distributions_3in1.png}
-%         \caption{Evolution of the distribution used when training an agent with DR via Entropy Maximization (DORAEMON). Every update $20 \geq k \geq 4$ does not further impact the evolution of the distribution over $B$, as success rate plateaus at 90\%.}
-%         \label{fig:DORAEMON_distrs_over_training}
-%     \end{subfigure}
-% \end{figure}
 
 \begin{figure}
     \centering
