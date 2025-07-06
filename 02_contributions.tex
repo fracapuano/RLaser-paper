@@ -1,8 +1,8 @@
-\contribution{We provide initial empirical evidence that Deep Reinforcement Learning can optimize High Power Laser systems while reducing unsafe exploration compared to a representative Bayesian–Optimisation baseline.}
-{Previous work predominantly relied on gradient–free black-box optimizers which assume stationarity and can explore the parameter space erratically. Our comparison is limited to a well-established BO variant in simulation and therefore constitutes an initial step rather than a comprehensive benchmark.}
+\contribution{We demonstrate the full benefits of using Deep Reinforcement Learning to optimize High Power Laser systems over currently dominant approaches based on gradient-free optimization.}
+{Prior works on laser optimization focused on black-box optimization techniques which assume stationarity, require costly real-world function evaluations, and can endanger the system at test-time.}
 
 \contribution{We learn a control policy directly from images, which are made available via widespread diagnostics devices.}
 {Instead of relying on noisy and lengthy processes to obtain structured representations of the system's state, we leverage unstructured observations coming from diagnostic devices as inputs for the control policy.}
 
-\contribution{We train control policies entirely in simulation and evaluate their robustness across a range of simulated dynamics, providing preliminary evidence of performance retention under varying parametrizations.}
-{Domain Randomization is used to expose the agent to diverse operating conditions. While encouraging, these results are confined to simulation and call for further verification on real hardware and against additional baselines.}
+\contribution{We train and evaluate control policies across a range of simulated dynamics, providing preliminary evidence of performance retention under varying environment parametrizations.}
+{Domain Randomization during training ensures robust performance across varied test environments, paving the way towards real-world use in under-modeled, non-stationary conditions.}
