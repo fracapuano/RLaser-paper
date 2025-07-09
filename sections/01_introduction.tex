@@ -1,13 +1,13 @@
 Ultra-fast light-matter interactions find applications in both theoretical and experimental physics. The extremely high intensities---in the order of petawatts---that can be attained with modern-day High Power Laser (HPL) systems enable a variety of use cases in light-matter interactions and charged-particles acceleration.
-Extreme intensities are typically achieved by focusing high-energy laser pulses onto spatial targets for ultra-short durations---down to attoseconds. As a result, ultra-short laser pulses represent the shortest events ever created by humanity~\citep{gaumnitz2017streaking}.
+Extreme intensities are typically achieved by focusing high-energy laser pulses onto spatial targets for ultra-short durations---down to attoseconds. As a result, ultra-short (attoseconds) laser pulses represent the shortest events ever created by humanity~\citep{gaumnitz2017streaking}.
 
 Over the course of 2022 and 2023, four separate experiments at the Lawrence Livermore National Laboratory (LLNL)-National Ignition Facility (USA) employed HPL systems to achieve nuclear fusion ignition~\citep{abu2024achievement}. 
 In their experiments, the scientists at the LLNL used 192 HPL beams to achieve nuclear fusion ignition in a laboratory setting, and went on demonstrating larger-than-unity energy gains, achieving energy-positive results in nuclear fusion. 
 HPL systems also have applications in radiation-based cancer therapy, as they can be used to produce beams of high-energy charged particles, which interact with malignant cells and thus yield radio-therapeutic outcomes~\citep{grittani2020device}. 
 Lastly, HPL systems enable the controlled study of the interaction between extremely intense beams of light and various materials, providing valuable insights to numerous scientific communities, including theoretical, plasma, and laser physicists.
 
-HPL systems' performance heavily depend on environmental conditions, and on numerous parameters. For instance, HPL systems are typically operated in remote areas or meters underground to mitigate road-induced vibrations that might cause misalignment in the optics. 
-Further, HPL systems are run in environmentally controlled facilities (\textit{cleanrooms}), to prevent airborne particles to sediment on the optical gear. 
+HPL systems' performance heavily depends on environmental conditions, and on numerous parameters. For instance, HPL systems are typically operated in remote areas or meters underground to mitigate road-induced vibrations that might cause misalignment in the optics. 
+Further, HPL systems are run in environmentally controlled facilities (\textit{cleanrooms}), to prevent airborne particles from sedimenting on the optical gear. 
 Parameters-wise, \textit{dispersion coefficients} play a central role, as they physically determine the phase shifts imposed on the different frequencies of the light beam. 
 In turn, this leads to shorter laser pulses and intensity gains when the applied phase induces constructive interferences between frequencies, whereas destructive interference results in longer pulses and intensity losses~\citep{paschotta2008field}.
 
@@ -24,15 +24,17 @@ Lastly, the safe implementation of black-box methods on real-world hardware can 
     \label{fig:figure1_and_cpa}
 \end{figure}
 
-This work investigates the safe application of DRL to HPL systems for temporal profile shaping via autonomous, bounded control of the dispersion coefficients. 
+This work investigates the safe application of DRL to HPL systems for temporal profile shaping via autonomous, bounded control of \textit{dispersion coefficients}. 
 In particular, we present an application of DRL to intensity maximization through pulse duration minimization. 
 We leverage an openly-available simulator~\citep{capuano2023temporl} of a component of the world's most powerful laser system~\citep{batysta2014pulse}, and learn an adaptive control policy capable of safely tuning the dispersion coefficients for intensity maximization. 
-In our work, we simulate different experimental conditions by arbitrarily randomizing parameters of our simulator, and use said randomization over the laser system dynamics to induce robustness to changes in experimental settings~\citep{tiboni2023domain}.
-As parameters of HPL systems can typically only be estimated and vary over time, robustness is paramount for a wide applicability of our approach. To further improve on this and pave the way towards real-world applications of RL to HPL systems, we exclusively process unstructured observations in the form of images (\textit{FROG traces}) readily available through diagnostic devices. 
+In our work, we simulate different experimental conditions by arbitrarily randomizing parameters of our simulator, and use randomization over the laser system dynamics to induce robustness to changes in experimental settings~\citep{tiboni2023domain}.
+As parameters of HPL systems can typically only be estimated and vary over time, robustness is paramount for an effective application of our method. To further improve on this and pave the way towards real-world applications of RL to HPL systems, we exclusively process unstructured observations in the form of images (\textit{FROG traces}) readily available through diagnostic devices. 
 
 Our contributions can be summarized as follows:
 \begin{itemize}
     \item We present an \textbf{application of DRL to the rich and complex domain of experimental laser physics}, demonstrating its suitability in handling the non-stationary and transient non-linear dynamics of HPL systems---challenges often overlooked by prevailing black-box approaches.
-    \item We \textbf{train control policies entirely in simulation and successfully transfer them} across different environments, ensuring adaptability to (1) inaccuracies in parameter estimation and (2) evolving experimental conditions. Randomizing also helps mitigate the impact of under-modeling in simulation.
     \item \textbf{We learn a control policy from single-channel images} readily available in most experimental settings, using them as a proxy for otherwise destructive pulse intensity measurements. Using images directly eliminates the need for quantum-destructive measurements of charged particles' energy or noisy temporal pulse reconstruction, and provides feedback signal leveraging existing experimental hardware, making our method applicable in real-world settings.
+    \item We \textbf{train control policies entirely in simulation and successfully transfer them} across different environments, ensuring adaptability to (1) inaccuracies in parameter estimation and (2) evolving experimental conditions. Randomizing also helps mitigate the impact of under-modeling in simulation.
 \end{itemize}
+
+We open-source the simulator, training and evaluation code at \url{https://github.com/fracapuano/RLaser}.
