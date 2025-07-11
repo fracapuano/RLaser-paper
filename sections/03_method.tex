@@ -37,7 +37,7 @@ In HPL systems, one cannot typically assume to have control over \( B \) but ind
 \end{figure}
 
 \paragraph{Reward function \( r \), starting condition \( \rho \) and discount factor \( \gamma \)}
-We exploit our knowledge of HPL systems to design a reward function defined as the ratio between the current-pulse peak intensity \( I_t^* \) and the highest intensity possibly obtainable, \( I_{TL} \) achieved by so-called \emph{Transform-Limited} pulses, yielding \(r_t(s_t, a_t, s_{t+1}) = \frac{I_t}{I_{TL}} \in [0,1] \ \forall t \). In the absence of non-linear effects due to amplification, one would impose a phase on the stretcher that is opposite to the compressor's, \( \varphi_s(\omega) = - \varphi_c(\omega) \) so as to maximize intensity. As non-linearity is induced, it is reasonable to look for solutions in a neighborhood of the compressor's dispersion coefficients. Thus, one can use a multivariate normal distribution \( \mathcal N(-\psi_c, \epsilon \mathbb I) \) with mean \( -\psi_c \) and diagonal variance-covariance matrix. Lastly, we employed an episodic framework for this problem, fixing the number of total interactions to \( T=20 \), and used a discount factor of \( \gamma=0.9 \).
+We exploit our knowledge of HPL systems to design a reward function defined as the ratio between the current-pulse peak intensity \( I_t \) and the highest intensity possibly obtainable, \( I_{TL} \) achieved by so-called \emph{Transform-Limited} pulses, yielding \(r_t(s_t, a_t, s_{t+1}) = \frac{I_t}{I_{TL}} \in [0,1] \ \forall t \). In the absence of non-linear effects due to amplification, one would impose a phase on the stretcher that is opposite to the compressor's, \( \varphi_s(\omega) = - \varphi_c(\omega) \) so as to maximize intensity. As non-linearity is induced, it is reasonable to look for solutions in a neighborhood of the compressor's dispersion coefficients. Thus, one can use a multivariate normal distribution \( \mathcal N(-\psi_c, \epsilon \mathbb I) \) with mean \( -\psi_c \) and diagonal variance-covariance matrix. Lastly, we employed an episodic framework for this problem, fixing the number of total interactions to \( T=20 \), and used a discount factor of \( \gamma=0.9 \).
 
 \subsection{Soft Actor Critic (SAC)}
 Because we run training in simulation, we are able to drastically scale the experience available to the agent. With that being said, our simulation routine requires non-trivial computation, such as obtaining \( \Phi_t \) from \( \psi_t \). Thus, we limit ourselves to the generally more sample-efficient end of DRL, and refrain from using purely on-policy methods, such as TRPO/PPO~\citep{schulman2015trust, schulman2017proximal}.
@@ -46,6 +46,24 @@ SAC is an off-policy DRL algorithm learning Q-functions (policy \textit{evaluati
 Interestingly, the Q-function itself is learned in a maximum entropy framework, leading to improved exploration and overall more effective learning over competing methods such as DDPG~\citep{haarnoja2018soft}. In this work, we implement both \emph{vanilla-SAC} and \emph{asymmetric-SAC}. The latter makes use of additional privileged information about the dynamics \( \xi \) while training. Notably, this information is yet not accessible by the policy, which is only conditioned on the current state.
 The adoption of this asymmetric paradigm has proven empirically effective in easing the training process, by providing full information to the critic networks which are nevertheless not queried at test time~\citep{akkaya2019solving}.
 
+% \begin{figure}[t!]
+%     \centering
+%     \begin{minipage}{0.35\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{images/machinesafety.png}
+%         \caption{Controls applied (BO vs RL). As it samples from an iteratively-refined surrogate model of \(I(\psi)\), BO explores much more erratically than RL.}
+%         \label{fig:bayes_vs_rl}
+%     \end{minipage}
+%     \hfill
+%     \begin{minipage}{0.35\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{images/doraemon_distributions_3in1.png}
+%         \caption{Evolution of the distribution used when training an agent with DORAEMON. Further updates \( k \in [4,20] \) do not impact the evolution of the distribution over \( B \).}
+%         \label{fig:DORAEMON_distrs_over_training}
+%     \end{minipage}
+%     \label{fig:control_and_distribution}
+% \end{figure}
+
 \subsection{Domain Randomization (DR)}
 To improve on the generalization of the control policy over unknown test conditions $\xi \sim \Xi^{real} $, we train a control policy in simulation by sampling dynamics parameters from an arbitrary auxiliary distribution $\Xi$. Particularly, we compare two popular methods for choosing said distribution over $\xi$, namely Uniform Domain Randomization (UDR)~\citep{tobin2017domain, sadeghi2016cad2rl} and Domain Randomization via Entropy Maximization (DORAEMON)~\citep{tiboni2023domain}.
 
@@ -53,7 +71,7 @@ UDR models \( \Xi \) as a uniform distribution over manually defined bounds \( [
 Crucially, identifying the bounds to use in training is an inherently brittle process: too-narrow bounds could hinder generalization, by not providing sufficient diversity over training. On the other hand, too-wide bounds can yield over-regularization, and thus result in reduced performance at test time. In the context of our application, experimentalists who are familiar with the specific pump-chain laser considered in this work estimate \( B \approx B_{\text{est}} = 2 \). Thus, we train a UDR policy in simulation by using $\xi = B \sim \mathcal U(1.5, 2.5)$, which is roughly equivalent to allowing misspecification of up to 25\% error.
 However, even assuming access to ground-truth bounds, the probability mass of \( B \) is unlikely to be uniformly distributed on large supports---this would severely impact the performance of the system on a day to day basis. Conversely, it is reasonable to expect mass to be concentrated around some value within a possibly larger support, further away from \( B_{\text{est}} \).
 In DORAEMON~\citep{tiboni2023domain}, the authors resolve the ambiguities in defining the training distribution by employing the principle of maximum entropy~\citep{jaynes1957information}. In other words, one could simply define a success indicator for the task, and seek for the maximum entropy training distribution \( \Xi \) that satisfies a lower bound on the success rate.
-%
+
 More precisely, DORAEMON solves this problem with a curriculum of evolving Beta distributions \( \Xi_k \sim \Beta(a_k, b_k) \).
-In line with~\citet{tiboni2023domain}, we apply DORAEMON as an implicit meta-learning strategy for training adaptive policies over hidden dynamics parameters. We define a custom success indicator function on trajectories \( \tau_{\xi_k} \): terminal-state pulses \( \chi(\psi_T) \) must convey at least 65\% of the TL-intensity for the respective episode to be considered successful.
+In line with~\citet{tiboni2023domain}, we apply DORAEMON as an implicit meta-learning strategy for training adaptive policies over hidden dynamics parameters. We define a custom success indicator function on trajectories \( \tau_{\xi_k} \): terminal-state pulses \( \chi(\psi_T) \) must convey at least 65\% of the TL-intensity (\( I_T / I_{TL} \geq 0.65 \)) for the respective episode to be considered successful.
 As a result, our implementation yields an automatic curriculum over DR distributions \( \Xi \) at training time such that entropy grows so long as the success rate is above \( 50 \)\%, as in the original DORAEMON paper.
