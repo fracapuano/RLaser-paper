@@ -42,13 +42,13 @@
 \newcommand{\problembox}[1]{\colorbox{mysecondary!30}{#1}}
 
 
-\AtBeginSection[]
-{
-  \begin{frame}
-    \frametitle{Table of Contents}
-    \tableofcontents[currentsection]
-  \end{frame}
-}
+% \AtBeginSection[]
+% {
+%   \begin{frame}
+%     \frametitle{Table of Contents}
+%     \tableofcontents[currentsection]
+%   \end{frame}
+% }
 
 \newcommand{\cmark}{\ding{51}}
 \newcommand{\xmark}{\ding{55}}
@@ -147,32 +147,38 @@
 %---------------------------------------
 \begin{frame}{Minimizing Duration = Optimal Shaping}
     \begin{figure}
-        \includegraphics[width=0.5\textwidth]{images/shaping-phase.png}
+        \includegraphics[width=0.45\linewidth]{images/shaping-phase.png}
     \end{figure}
     Controlling the phase \redify{in the frequency domain} impacts the pulse's duration \redify{in the temporal domain}.
         \begin{itemize}
-            \item \circled{1} \highlight{In control} \notebox{Stretching the pulse into fundamental frequencies} 
-            \item \circled{2} \highlights{Out of control} Amplifying the different frequencies (\redify{non-linear})
-            \item \circled{3} \highlights{Out of control} Recompressing in time, aligning frequencies yielding \highlight{constructive interferences}
+            \item \circled{1} \notebox{Stretching the pulse into fundamental frequencies} \highlight{Can control} 
+            \item \circled{2} Amplifying the different frequencies (\redify{non-linear}) \highlights{Can't control}
+            \item \circled{3} Recompressing in time, aligning frequencies yielding \highlight{constructive interferences} \highlights{Can't control}
         \end{itemize}
 \end{frame}
 %---------------------------------------
-\begin{frame}{Anon, ngmi}
+\begin{frame}{Shaping feels like "Anon, \textit{ngmi}"}
+    \uncover<+->{
     \circled{1} \redify{State reconstruction}
         \begin{itemize}
         \item Lasting pico/attoseconds, ultra-short temporal profiles \redify{cannot be directly measured}.
         \item Measuring the intensity achieved is a \redify{destructive process}.
         \end{itemize}
+    }
+    \uncover<+->{
     \circled{2} \redify{(Unknown-)Dynamics dependant}
     \begin{itemize}
         \item Shaping system's \redify{parameters change day by day}, and not always for fully modelled reasons.
-        \item The process of non-linear amplification/phase accumulation is itself not well understood
+        \item The processes of non-linear amplification and phase accumulation themselves are not fully understood
         \end{itemize}
+    }
+    \uncover<+->{
     \circled{3} \redify{Fragile in real-world settings}
     \begin{itemize}
         \item Real-world shapers are delicate machines needing proper care relatively to the control applied
-        \item Besides being correct, \redify{controls need to be appropriate}, both in (1) absolute and (2) relative terms.
+        \item Besides being correct, \redify{controls need to be appropriate}, both in absolute and relative terms.
     \end{itemize}
+    }
 \end{frame}
 %---------------------------------------
 \section{Deep RL for Laser Pulses}
@@ -190,10 +196,10 @@
     \end{column}
     \begin{column}{0.3\textwidth}
         \begin{figure}
-            \includegraphics[width=0.5\linewidth]{images/rl-prob-1.png}
+            \includegraphics[width=0.6\linewidth]{images/rl-prob-1.png}
         \end{figure}
         \begin{figure}
-            \includegraphics[width=0.5\linewidth]{images/rl-sol-1.png}
+            \includegraphics[width=0.6\linewidth]{images/rl-sol-1.png}
         \end{figure}
     \end{column}
 \end{columns}
@@ -203,8 +209,7 @@
     \begin{center}
         \circled{2} \redify{Induce robustness to dynamics}
     \end{center}
-    Randomize dynamics over training by adapting a meta-distribution conditionally on performance \footnote{"Domain randomization via entropy maximization", Tiboni et al., ICLR 2024}
-    \redify{Automatically adapt the randomization distribution} based on performance during training.
+    \redify{Automatically adapt the randomization distribution} based on performance during training \footnote{"Domain randomization via entropy maximization", Tiboni et al., ICLR 2024}
     \begin{columns}[T,totalwidth=\textwidth]
     \begin{column}[t]{0.5\textwidth}
         \centering
@@ -214,7 +219,7 @@
     \end{column}
     \begin{column}[t]{0.5\textwidth}
         \begin{figure}
-            \includegraphics[width=\linewidth]{images/udr_vs_doraemon_violin.png}
+            \includegraphics[width=\linewidth]{images/udr_vs_doraemon_average.png}
         \end{figure}
     \end{column}
     \end{columns}
@@ -224,12 +229,12 @@
     \begin{center}
     \circled{3} \redify{Train in a (coarse) simulator}
     \end{center}
-    Avoid exploration on real-world systems by training in simulation, allocating erratic behavior to in-simulation training
+    Avoid exploration on real-world systems by \redify{training in simulation}, allocating erratic behavior to in-simulation training
     \begin{columns}[T,totalwidth=\textwidth]
     \begin{column}{0.5\textwidth}
         \centering
         \begin{figure}
-            \animategraphics[width=\linewidth,autoplay,loop]{24}{images/erratic-control-frames/}{0}{149}
+            \animategraphics[width=\linewidth,autoplay,loop]{24}{images/erratic-control-frames/}{0}{448}
         \end{figure}
     \end{column}
     \begin{column}{0.5\textwidth}
@@ -241,31 +246,49 @@
 \end{frame}
 %---------------------------------------
 \begin{frame}[fragile]{Deep RL for pulse shaping}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \circled{1} \redify{Asymmetric \\ Soft Actor-Critic} \\
+            \notebox{Augment observations} fed to the critic network with the dynamics parameters, \( B_{\text{est.}} \).
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \circled{2} \redify{Entropy-driven \\ Domain Randomization} \\
+            \notebox{Avoid manually tuning} \( \Xi : B_{\text{est.}} \sim \Xi \), adapting it based on training signal.
+        \end{column}
+    \end{columns}
+    \vspace{1em}
+    
+    We train a controller to \redify{safely tune} laser parameters for intensity maximization \redify{across dynamics} and using \redify{image observations only}.
     \begin{figure}
-        \animategraphics[width=0.8\linewidth,autoplay,loop]{24}{images/environment-rendering-frames/}{0}{143}
+        \animategraphics[width=0.9\linewidth,autoplay,loop]{12}{images/environment-rendering-frames/}{0}{143}
     \end{figure}
-    We train a controller to \redify{safely tune laser parameters} for intensity maximization, \redify{across dynamics} and using \redify{image observations only}.
 \end{frame}
 %---------------------------------------
 \begin{frame}{Conclusions}
-\begin{itemize}
-    \item We present a new method for shaping laser pulses using RL.
-    \item Our method learns from images, bypassing noisy reconstruction.
-    \item It is robust to changes in the dynamics thanks to entropy-driven DR.
-    \item It is trained in simulation, ensuring (safe) exploration.
+We present a new method for shaping laser pulses using Deep RL, striving towards \redify{real-world usage} on the world's \redify{most powerful laser system}.
+\uncover<+->{
+\begin{itemize}[<+->]
+   \item We learn from images only, bypassing noisy state reconstruction.
+   \item We train policies robust to changes in the dynamics thanks to entropy-driven DR.
+   \item We train in simulation, ensuring (safe) exploration leveraging results on cross-domain transferability.
 \end{itemize}
-
-Code \& testbed are both \redify{open-source}!
+}
+\vspace{1em}
+\uncover<+->{
+Environment code \notebox{\texttt{gym-laser}} \& testbed are both online and \redify{open-source}!
 
 \centering
 \begin{columns}
-    \begin{column}{0.3\textwidth}
-        \includegraphics[width=\linewidth]{images/space-qr.png}
-    \end{column}
-    \begin{column}{0.3\textwidth}
+    \begin{column}{0.2\textwidth}
         \includegraphics[width=\linewidth]{images/env-qr.png}
     \end{column}
+    \begin{column}{0.2\textwidth}
+        \includegraphics[width=\linewidth]{images/space-qr.png}
+    \end{column}
 \end{columns}
+}
 
 \end{frame}
 % ----------------------------------------
