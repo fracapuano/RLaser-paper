@@ -1,4 +1,5 @@
 \documentclass{beamer}
+
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -6,38 +7,21 @@
 \usepackage{tikz}
 \usepackage{animate}
 \usepackage{media9}
-\usetheme{Madrid}
-\usepackage{graphicx}   % For minipage alignment
+\usepackage{adjustbox}
+
 \usepackage{multirow}   % For multi-row cells in tables
-\usepackage{amssymb}    % For symbols like \cmark and \xmark
 \usepackage{booktabs}   % (Optional) For better table aesthetics
 \usepackage{natbib}
-\usepackage{tikz}
+\usepackage{xcolor}  % needed if you define custom colors
+\usepackage[normalem]{ulem}
+\usepackage{subcaption}
+
 
 \usetheme{Madrid}
-
-% 2) Define your custom base color by RGB
-\usepackage{xcolor}  % needed if you define custom colors
-\definecolor{myprimary}{RGB}{4,130,153} % Example: SteelBlue
-\newcommand{\redify}[1]{\textcolor{myprimary}{\textbf{#1}}}
-\newcommand{\posterior}{p (\theta \vert \mathcal{D})}
-\newcommand{\prior}{p (\theta)}
-\newcommand{\likelihood}{p(\mathcal{D} \vert \theta)}
-\newcommand{\data}{\mathcal D}
-\newcommand{\thetamap}{\theta_{\text{MAP}}}
-\newcommand{\hessian}{\nabla_\theta^2 \mathcal{L}(\theta; \mathcal{D})}
-
-\newcommand{\cmark}{\ding{51}}
-\newcommand{\xmark}{\ding{55}}
+\definecolor{myprimary}{HTML}{9792E3}
+\definecolor{mysecondary}{HTML}{DB5461}
 
 
-% \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
-%             \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
-\newcommand{\circled}[1]{%
-  \tikz[baseline=(char.base)]\node[draw,circle,inner sep=1pt,thick](char){\textbf{#1}};%
-}
-
-% 3) Override key color settings in Beamer
 \setbeamercolor{structure}{fg=myprimary}% affects titles, bullets, etc.
 \setbeamercolor{title}{fg=white,bg=myprimary}
 \setbeamercolor{subtitle}{fg=myprimary}
@@ -48,12 +32,51 @@
 \setbeamercolor{itemize subitem}{fg=myprimary}
 \setbeamercolor{alerted text}{fg=red!80!black} 
 
-\title{Shaping Laser Pulses with Reinforcement Learning}
-\author{Francesco Capuano, Davorin Peceli, Gabriele Tiboni}
-\date{\today}
+% \setbeamertemplate{page number in head/foot}[totalframenumber]
+
+\newcommand{\redify}[1]{\textcolor{myprimary}{\textbf{#1}}}
+\newcommand{\highlight}[1]{\textcolor{myprimary}{#1}}
+\newcommand{\highlights}[1]{\textcolor{mysecondary}{#1}}
+
+\newcommand{\notebox}[1]{\colorbox{myprimary!30}{#1}}
+\newcommand{\problembox}[1]{\colorbox{mysecondary!30}{#1}}
+
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+
+\newcommand{\circled}[1]{%
+  \tikz[baseline=(char.base)]\node[draw=myprimary,circle,inner sep=1pt,thick,text=myprimary](char){\textbf{#1}};%
+}
+
+\title{Shaping Laser Pulses with RL}
+\author[Capuano F., Peceli D., Tiboni G.]{
+    Francesco \redify{Capuano}$^{(1,2)}$, 
+    Davorin \redify{Peceli}$^{(3)}$, 
+    Gabriele \redify{Tiboni}$^{(4,5)}$
+}
+
+\institute[]{
+    \inst{1} \adjustbox{valign=c}{\includegraphics[height=0.5cm]{images/ens-ps.png}} ENS Paris-Saclay \quad
+    \inst{2} \adjustbox{valign=c}{\includegraphics[height=0.5cm]{images/hf.png}} Hugging Face \quad
+    \inst{3} \adjustbox{valign=c}{\includegraphics[height=0.5cm]{images/elilogo.png}} ELI Beamlines \and
+    \inst{4} \adjustbox{valign=c}{\includegraphics[height=0.5cm]{images/Wurzuburg.png}} JMU Würzburg \quad
+    \inst{5} \adjustbox{valign=c}{\includegraphics[height=0.5cm]{images/Darmstandt.png}} TU Darmstadt
+}
+
+\date{\today, RLC'25}
 
 \titlegraphic{
-  % \includegraphics[width=3cm]{images/RL_logo.png}
+    \includegraphics[width=4cm]{images/rlc-logo.png}
 }
 
 \begin{document}
@@ -62,157 +85,195 @@
 \begin{frame}
   \titlepage
 \end{frame}
+%----------------------------------
+\begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents
+    \end{frame}
+%---------------------------------------
+\section{Ultra-short Laser Pulses}
 
-%---------------------------------------
-\begin{frame}{Overview}
+\begin{frame}[fragile]{Ultra-short Laser Pulses}
+    Ultrashort ($\leq 10^{-12}$ s) laser pulses are the \redify{shortest systematic events humans can create}. They enable a range of applications, including:
 \begin{columns}[T,totalwidth=\textwidth]
     \begin{column}{0.5\textwidth}
-        \begin{itemize}
-            \item \textbf{The problem}: Shaping laser pulses for high-intensity physics is complex.
-            \item Traditional methods are slow and not robust to changes.
-            \item \textbf{Our solution}: Use Reinforcement Learning to control the laser.
-            \item Our method learns from images, adapts to changes, and is safe.
-        \end{itemize}
+        \circled{1} \redify{Particle acceleration}
+            \begin{figure}
+                \animategraphics[width=0.5\linewidth,autoplay,loop]{24}{images/light-through-matter-frames/}{0}{188}
+                \caption{Light traversing through matter, exchanging energy thereby accelerating particles.}
+            \end{figure}
     \end{column}
     \begin{column}{0.5\textwidth}
-        % \begin{figure}
-        %     \includegraphics[width=\linewidth]{images/Figure1_and_CPA.png}
-        %     \caption{The RL setup for laser pulse shaping.}
-        % \end{figure}
+        \circled{2} \redify{Nuclear fusion}
+        \begin{figure}
+            \includegraphics[width=\linewidth]{images/nuclear-nyt.png}
+            \caption{NYT covering laser bursts used to achieve nuclear fusion ignition at the LLNL (USA), 2022.}
+        \end{figure}
     \end{column}
 \end{columns}
-\end{frame}
 
+\end{frame}
 %---------------------------------------
-\begin{frame}{Background: Shaping Laser Pulses}
-\begin{columns}[T,totalwidth=\textwidth]
-    \begin{column}{0.5\textwidth}
+\begin{frame}{Maximize Intensity by Minimizing Duration}
+    Laser bursts convey energy in both \highlight{time} and \highlight{space}.
+    \begin{figure}
+        \includegraphics[width=0.4\textwidth]{images/frogs.png}
+        \caption{(left) Poorly temporally-focused pulse (right) Temporally-focused pulse}
+    \end{figure}
+    Particle acceleration \& fusion ignition both require high-intensity bursts.
+    \[
+        PI_t \propto \frac{2E}{\int I_\psi(t) dt}
+    \]
+    \highlight{Intensity grows when:}
+    \begin{itemize}
+        \item Increases in the pulse energy, $E \uparrow$
+        \item Decreases in pulse duration \notebox{$\int I_\psi(t) dt \downarrow$}
+    \end{itemize}
+\end{frame}
+%---------------------------------------
+\section{Shaping Laser Pulses}
+\begin{frame}[fragile]{Minimizing Duration = Optimal Shaping}
+    \begin{figure}
+        \animategraphics[width=0.45\linewidth,autoplay,loop]{10}{images/phase-control-frames/}{0}{9}
+        \caption{(left) Spectral pulse, phase in yellow (right) Resulting temporal profile.}
+    \end{figure}
+    Controlling the phase \redify{in the frequency domain} impacts the pulse's duration \redify{in the temporal domain}. Shaping consists of:
+    \begin{itemize}
+        \item \circled{1} Stretching the pulse into fundamental frequencies
+        \item \circled{2} Amplifying the different frequencies (\redify{non-linear})
+        \item \circled{3} Recompressing in time, aligning frequencies yielding \highlight{constructive interferences}
+    \end{itemize}
+\end{frame}
+%---------------------------------------
+\begin{frame}{Minimizing Duration = Optimal Shaping}
+    \begin{figure}
+        \includegraphics[width=0.5\textwidth]{images/shaping-phase.png}
+    \end{figure}
+    Controlling the phase \redify{in the frequency domain} impacts the pulse's duration \redify{in the temporal domain}.
         \begin{itemize}
-            \item Attosecond laser pulses are the shortest events created by mankind.
-            \item They provide unprecedented insights into light-matter interactions.
-            \item Phase shifts are applied for higher intensities, exploiting non-linear effects.
-            \item This is done using a technique called Chirped Pulse Amplification (CPA).
+            \item \circled{1} \highlight{In control} \notebox{Stretching the pulse into fundamental frequencies} 
+            \item \circled{2} \highlights{Out of control} Amplifying the different frequencies (\redify{non-linear})
+            \item \circled{3} \highlights{Out of control} Recompressing in time, aligning frequencies yielding \highlight{constructive interferences}
         \end{itemize}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-        % \begin{figure}
-        %     \includegraphics[width=\linewidth]{images/CPA.png}
-        %     \caption{Chirped Pulse Amplification (CPA) process.}
-        % \end{figure}
-    \end{column}
-\end{columns}
-\end{frame}
-
-%---------------------------------------
-\begin{frame}{The Challenges of Pulse Shaping}
-\begin{columns}[T,totalwidth=\textwidth]
-    \begin{column}{0.33\textwidth}
-        \centering
-        \textbf{\circled{1} State Estimation} \\
-        \vspace{1.25em}
-        \includegraphics[width=\linewidth]{images/frogopt.png}
-        \vspace{0.5em}
-        Imprecise pulse reconstruction leads to poor state estimation.
-    \end{column}
-    \begin{column}[t]{0.33\textwidth}
-        \centering
-        \textbf{\circled{2} System Dynamics} \\
-        \vspace{1.25em}
-        \includegraphics[width=\linewidth]{images/B_integral.png}
-        \vspace{0.5em}
-        Doesn't generalize well to new laser dynamics.
-    \end{column}
-    \begin{column}[t]{0.33\textwidth}
-        \centering
-        \textbf{\circled{3} Machine Safety} \\
-        \vspace{1.25em}
-        \includegraphics[width=\linewidth]{images/machinesafety.png}
-        \vspace{0.5em}
-        Erratic exploration can endanger the system.
-    \end{column}
-\end{columns}
 \end{frame}
 %---------------------------------------
-%---------------------------------------
-\begin{frame}{RL to the Rescue}
-\begin{columns}[T,totalwidth=\textwidth]
-    \begin{column}{0.33\textwidth}
-        \centering
-        \textbf{\circled{1} Learn from Images} \\
-        \vspace{1.25em}
-        \includegraphics[width=\linewidth]{images/Figure1.png}
-        \vspace{0.5em}
-        Bypass noisy pulse reconstruction by learning from raw diagnostics.
-    \end{column}
-    \begin{column}[t]{0.33\textwidth}
-        \centering
-        \textbf{\circled{2} Adapt to Dynamics} \\
-        \vspace{1.25em}
-        \includegraphics[width=\linewidth]{images/doraemon_distr.png}
-        \vspace{0.5em}
-        Train on diverse scenarios to develop robust control strategies.
-    \end{column}
-    \begin{column}[t]{0.33\textwidth}
-        \centering
-        \textbf{\circled{3} Safe Exploration} \\
-        \vspace{1.25em}
-        \includegraphics[width=\linewidth]{images/peak_intensity.png}
-        \vspace{0.5em}
-        Train in simulation to prevent erratic behavior at test time.
-    \end{column}
-\end{columns}
-\end{frame}
-%---------------------------------------
-\begin{frame}{Method: Learning from Images}
-\begin{columns}[T,totalwidth=\textwidth]
-    \begin{column}{0.5\textwidth}
+\begin{frame}{Anon, ngmi}
+    \circled{1} \redify{State reconstruction}
         \begin{itemize}
-            \item We train an RL agent to control the laser parameters (GDD, TOD, FOD).
-            \item The agent receives a FROG trace image as input.
-            \item It outputs a change in the laser parameters.
-            \item The goal is to maximize the peak intensity of the laser pulse.
+        \item Lasting pico/attoseconds, ultra-short temporal profiles \redify{cannot be directly measured}.
+        \item Measuring the intensity achieved is a \redify{destructive process}.
         \end{itemize}
+    \circled{2} \redify{(Unknown-)Dynamics dependant}
+    \begin{itemize}
+        \item Shaping system's \redify{parameters change day by day}, and not always for fully modelled reasons.
+        \item The process of non-linear amplification/phase accumulation is itself not well understood
+        \end{itemize}
+    \circled{3} \redify{Fragile in real-world settings}
+    \begin{itemize}
+        \item Real-world shapers are delicate machines needing proper care relatively to the control applied
+        \item Besides being correct, \redify{controls need to be appropriate}, both in (1) absolute and (2) relative terms.
+    \end{itemize}
+\end{frame}
+%---------------------------------------
+\section{Deep RL for Laser Pulses}
+\begin{frame}{Deep RL to the rescue (1/3)}
+    \begin{center}
+        \circled{1} \redify{Use unstructured observations}
+    \end{center}
+    Bypass noisy pulse reconstructions, use raw diagnostics \redify{(images)} only. Diagnostic measurements are \redify{not destructive}.
+    \begin{columns}[T,totalwidth=\textwidth]
+    \begin{column}{0.7\textwidth}
+        \centering
+        \begin{figure}
+            \includegraphics[width=\linewidth]{images/Figure1.png}
+        \end{figure}
     \end{column}
-    \begin{column}{0.5\textwidth}
-        % \begin{figure}
-        %     \includegraphics[width=\linewidth]{images/Figure1_and_CPA_edit.png}
-        %     \caption{The RL agent learns to map FROG images to laser parameter adjustments.}
-        % \end{figure}
+    \begin{column}{0.3\textwidth}
+        \begin{figure}
+            \includegraphics[width=0.5\linewidth]{images/rl-prob-1.png}
+        \end{figure}
+        \begin{figure}
+            \includegraphics[width=0.5\linewidth]{images/rl-sol-1.png}
+        \end{figure}
     \end{column}
 \end{columns}
 \end{frame}
 %---------------------------------------
-\begin{frame}{Experimental Results}
-\begin{columns}[T,totalwidth=\textwidth]
+\begin{frame}{Deep RL to the rescue (2/3)}
+    \begin{center}
+        \circled{2} \redify{Induce robustness to dynamics}
+    \end{center}
+    Randomize dynamics over training by adapting a meta-distribution conditionally on performance \footnote{"Domain randomization via entropy maximization", Tiboni et al., ICLR 2024}
+    \redify{Automatically adapt the randomization distribution} based on performance during training.
+    \begin{columns}[T,totalwidth=\textwidth]
+    \begin{column}[t]{0.5\textwidth}
+        \centering
+        \begin{figure}
+            \includegraphics[width=\linewidth]{images/rl-sol-2.png}
+        \end{figure}
+    \end{column}
+    \begin{column}[t]{0.5\textwidth}
+        \begin{figure}
+            \includegraphics[width=\linewidth]{images/udr_vs_doraemon_violin.png}
+        \end{figure}
+    \end{column}
+    \end{columns}
+\end{frame}
+%---------------------------------------
+\begin{frame}[fragile]{Deep RL to the rescue (3/3)}
+    \begin{center}
+    \circled{3} \redify{Train in a (coarse) simulator}
+    \end{center}
+    Avoid exploration on real-world systems by training in simulation, allocating erratic behavior to in-simulation training
+    \begin{columns}[T,totalwidth=\textwidth]
     \begin{column}{0.5\textwidth}
         \centering
-        \textbf{Adapting to Dynamics}
-        \includegraphics[width=\linewidth]{images/doraemon_vs_udr_succ_rate_70.png}
-        Our method (DORAEMON) maintains high performance.
+        \begin{figure}
+            \animategraphics[width=\linewidth,autoplay,loop]{24}{images/erratic-control-frames/}{0}{149}
+        \end{figure}
     \end{column}
     \begin{column}{0.5\textwidth}
-        \centering
-        \textbf{Peak Intensity}
-        \includegraphics[width=\linewidth]{images/udr_vs_doraemon_average.png}
-        Our method achieves higher peak intensity.
+        \begin{figure}
+            \includegraphics[width=\linewidth]{images/rl-sol-3.png}
+        \end{figure}
     \end{column}
-\end{columns}
+    \end{columns}
+\end{frame}
+%---------------------------------------
+\begin{frame}[fragile]{Deep RL for pulse shaping}
+    \begin{figure}
+        \animategraphics[width=0.8\linewidth,autoplay,loop]{24}{images/environment-rendering-frames/}{0}{143}
+    \end{figure}
+    We train a controller to \redify{safely tune laser parameters} for intensity maximization, \redify{across dynamics} and using \redify{image observations only}.
 \end{frame}
 %---------------------------------------
 \begin{frame}{Conclusions}
 \begin{itemize}
     \item We present a new method for shaping laser pulses using RL.
     \item Our method learns from images, bypassing noisy reconstruction.
-    \item It is robust to changes in the laser's dynamics.
-    \item It is trained in simulation, ensuring safe exploration.
-    \item Our results show that our method outperforms existing baselines.
+    \item It is robust to changes in the dynamics thanks to entropy-driven DR.
+    \item It is trained in simulation, ensuring (safe) exploration.
 \end{itemize}
+
+Code \& testbed are both \redify{open-source}!
+
+\centering
+\begin{columns}
+    \begin{column}{0.3\textwidth}
+        \includegraphics[width=\linewidth]{images/space-qr.png}
+    \end{column}
+    \begin{column}{0.3\textwidth}
+        \includegraphics[width=\linewidth]{images/env-qr.png}
+    \end{column}
+\end{columns}
+
 \end{frame}
 % ----------------------------------------
-\begin{frame}[allowframebreaks]{References}
-  \small
-  \bibliographystyle{plainnat}
-  \bibliography{main} 
+\begin{frame}
+    Questions? \notebox{Poster 21}
+    \begin{figure}
+        \includegraphics[width=0.6\textwidth]{images/sabers.jpg}
+    \end{figure}
 \end{frame}
 % ----------------------------------------
 \end{document}
