@@ -86,10 +86,10 @@
   \titlepage
 \end{frame}
 %----------------------------------
-\begin{frame}
-    \frametitle{Table of Contents}
-    \tableofcontents
-    \end{frame}
+% \begin{frame}
+%     \frametitle{Table of Contents}
+%     \tableofcontents
+% \end{frame}
 %---------------------------------------
 \section{Ultra-short Laser Pulses}
 
@@ -122,7 +122,7 @@
     \end{figure}
     Particle acceleration \& fusion ignition both require high-intensity bursts.
     \[
-        PI_t \propto \frac{2E}{\int I_\psi(t) dt}
+        PI(\psi) \propto \frac{2E}{\int I_\psi(t) dt}
     \]
     \highlight{Intensity grows when:}
     \begin{itemize}
@@ -182,7 +182,7 @@
 \end{frame}
 %---------------------------------------
 \section{Deep RL for Laser Pulses}
-\begin{frame}{Deep RL to the rescue (1/3)}
+\begin{frame}{Deep RL To The Rescue (1/3)}
     \begin{center}
         \circled{1} \redify{Use unstructured observations}
     \end{center}
@@ -205,7 +205,7 @@
 \end{columns}
 \end{frame}
 %---------------------------------------
-\begin{frame}{Deep RL to the rescue (2/3)}
+\begin{frame}{Deep RL To The Rescue (2/3)}
     \begin{center}
         \circled{2} \redify{Induce robustness to dynamics}
     \end{center}
@@ -225,7 +225,7 @@
     \end{columns}
 \end{frame}
 %---------------------------------------
-\begin{frame}[fragile]{Deep RL to the rescue (3/3)}
+\begin{frame}[fragile]{Deep RL To The Rescue (3/3)}
     \begin{center}
     \circled{3} \redify{Train in a (coarse) simulator}
     \end{center}
@@ -262,7 +262,7 @@
     
     We train a controller to \redify{safely tune} laser parameters for intensity maximization \redify{across dynamics} and using \redify{image observations only}.
     \begin{figure}
-        \animategraphics[width=0.9\linewidth,autoplay,loop]{12}{images/environment-rendering-frames/}{0}{143}
+        \animategraphics[width=0.9\linewidth,autoplay,loop]{24}{images/environment-rendering-frames/}{0}{143}
     \end{figure}
 \end{frame}
 %---------------------------------------
