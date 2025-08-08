@@ -66,11 +66,11 @@
 }
 
 \institute[]{
-    \inst{1} \adjustbox{valign=c}{\includegraphics[height=0.5cm]{images/ens-ps.png}} ENS Paris-Saclay \quad
-    \inst{2} \adjustbox{valign=c}{\includegraphics[height=0.5cm]{images/hf.png}} Hugging Face \quad
-    \inst{3} \adjustbox{valign=c}{\includegraphics[height=0.5cm]{images/elilogo.png}} ELI Beamlines \and
-    \inst{4} \adjustbox{valign=c}{\includegraphics[height=0.5cm]{images/Wurzuburg.png}} JMU Würzburg \quad
-    \inst{5} \adjustbox{valign=c}{\includegraphics[height=0.5cm]{images/Darmstandt.png}} TU Darmstadt
+    \inst{1} \adjustbox{valign=c}{\includegraphics[height=0.5cm]{images/ens-ps.png}} \highlight{ENS} Paris-Saclay \quad
+    \inst{2} \adjustbox{valign=c}{\includegraphics[height=0.5cm]{images/hf.png}} \highlight{Hugging Face} \quad
+    \inst{3} \adjustbox{valign=c}{\includegraphics[height=0.5cm]{images/elilogo.png}} \highlight{ELI} Beamlines \and
+    \inst{4} \adjustbox{valign=c}{\includegraphics[height=0.5cm]{images/Wurzuburg.png}} \highlight{JMU} Würzburg \quad
+    \inst{5} \adjustbox{valign=c}{\includegraphics[height=0.5cm]{images/Darmstandt.png}} \highlight{TU} Darmstadt
 }
 
 \date{\today, RLC'25}
@@ -122,7 +122,7 @@
     \end{figure}
     Particle acceleration \& fusion ignition both require high-intensity bursts.
     \[
-        PI(\psi) \propto \frac{2E}{\int I_\psi(t) dt}
+        PI(\psi) \propto \frac{E}{\int I_\psi(t) dt}
     \]
     \highlight{Intensity grows when:}
     \begin{itemize}
@@ -132,7 +132,7 @@
 \end{frame}
 %---------------------------------------
 \section{Shaping Laser Pulses}
-\begin{frame}[fragile]{Minimizing Duration = Optimal Shaping}
+\begin{frame}[fragile]{Optimal Shaping = Minimizing Duration}
     \begin{figure}
         \animategraphics[width=0.45\linewidth,autoplay,loop]{10}{images/phase-control-frames/}{0}{9}
         \caption{(left) Spectral pulse, phase in yellow (right) Resulting temporal profile.}
@@ -140,19 +140,19 @@
     Controlling the phase \redify{in the frequency domain} impacts the pulse's duration \redify{in the temporal domain}. Shaping consists of:
     \begin{itemize}
         \item \circled{1} Stretching the pulse into fundamental frequencies
-        \item \circled{2} Amplifying the different frequencies (\redify{non-linear})
+        \item \circled{2} Amplifying the different frequencies \redify{(non-linear)}
         \item \circled{3} Recompressing in time, aligning frequencies yielding \highlight{constructive interferences}
     \end{itemize}
 \end{frame}
 %---------------------------------------
-\begin{frame}{Minimizing Duration = Optimal Shaping}
+\begin{frame}{Optimal Shaping = Minimizing Duration}
     \begin{figure}
         \includegraphics[width=0.45\linewidth]{images/shaping-phase.png}
     \end{figure}
     Controlling the phase \redify{in the frequency domain} impacts the pulse's duration \redify{in the temporal domain}.
         \begin{itemize}
             \item \circled{1} \notebox{Stretching the pulse into fundamental frequencies} \highlight{Can control} 
-            \item \circled{2} Amplifying the different frequencies (\redify{non-linear}) \highlights{Can't control}
+            \item \circled{2} Amplifying the different frequencies \redify{(non-linear)} \highlights{Can't control}
             \item \circled{3} Recompressing in time, aligning frequencies yielding \highlight{constructive interferences} \highlights{Can't control}
         \end{itemize}
 \end{frame}
@@ -245,7 +245,7 @@
     \end{columns}
 \end{frame}
 %---------------------------------------
-\begin{frame}[fragile]{Deep RL for pulse shaping}
+\begin{frame}[fragile]{Deep RL for Pulse Shaping}
     \begin{columns}
         \begin{column}{0.5\textwidth}
             \centering
@@ -267,12 +267,12 @@
 \end{frame}
 %---------------------------------------
 \begin{frame}{Conclusions}
-We present a new method for shaping laser pulses using Deep RL, striving towards \redify{real-world usage} on the world's \redify{most powerful laser system}.
+We present a new method for shaping laser pulses using Deep RL.
 \uncover<+->{
 \begin{itemize}[<+->]
    \item We learn from images only, bypassing noisy state reconstruction.
    \item We train policies robust to changes in the dynamics thanks to entropy-driven DR.
-   \item We train in simulation, ensuring (safe) exploration leveraging results on cross-domain transferability.
+   \item We train in simulation, ensuring (safe) exploration by leveraging results on cross-domain transferability.
 \end{itemize}
 }
 \vspace{1em}
